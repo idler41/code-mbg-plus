@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <context id="auth-management" targetRuntime="MyBatis3">
+        <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；
+        一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖
+        -->
+        <property name="autoDelimitKeywords" value="false"/>
+        <!-- 生成的Java文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 格式化java代码 -->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <!-- 格式化XML代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
+        <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="com.lfx.code.mbg.plus.plugin.DomainTablePlugin"/>
+        <plugin type="com.lfx.code.mbg.plus.plugin.LombokPlugin"/>
+        <plugin type="com.lfx.code.mbg.plus.plugin.ExamplePlugin"/>
+        <plugin type="com.lfx.code.mbg.plus.plugin.MapperPlugin"/>
+        <plugin type="com.lfx.code.mbg.plus.plugin.MapperOverIgnorePlugin"/>
+        <plugin type="com.lfx.code.mbg.plus.plugin.VelocityPlugin"/>
+
+        <commentGenerator type="com.lfx.code.mbg.plus.comment.MyCommentGenerator">
+            <!-- 这个元素用来去除指定生成的注释中是否包含生成的日期 false:表示保护 -->
+            <!-- 如果生成日期，会造成即使修改一个字段，整个实体类所有属性都会发生变化，不利于版本控制，所以设置为true -->
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--数据库链接URL，用户名、密码 -->
+        <jdbcConnection driverClass="${jdbc.driver}" connectionURL="${jdbc.url}"
+                        userId="${jdbc.username}" password="${jdbc.password}">
+            <!--设置为 true 可以获取 tables 信息, 解决生成文件缺少 xxxByPrimaryKey 的问题 -->
+            <property name="useInformationSchema" value="true"/>
+        </jdbcConnection>
+
+        <!-- 类型转换 -->
+        <javaTypeResolver type="com.lfx.code.mbg.plus.type.JavaTypeResolverImpl">
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <!--生成Model类存放位置-->
+        <javaModelGenerator targetPackage="${project.package.model}" targetProject="${project.path.java}">
+            <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
+            <property name="enableSubPackages" value="false"/>
+        </javaModelGenerator>
+
+        <!--生成映射文件存放位置-->
+        <sqlMapGenerator targetPackage="${project.package.mapper}" targetProject="${project.path.resources}">
+            <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!--生成Dao类存放位置-->
+        <!--<javaClientGenerator type="XMLMAPPER" targetPackage="com.lfx.auth.mapper" targetProject="src/main/java">-->
+        <!--<property name="enableSubPackages" value="false"/>-->
+        <!--</javaClientGenerator>-->
+
+        <!--生成对应表及类名-->
+        <table tableName="*"></table>
+        <!--<table tableName="am_user" domainObjectName="User">-->
+        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+
+    </context>
+</generatorConfiguration>
