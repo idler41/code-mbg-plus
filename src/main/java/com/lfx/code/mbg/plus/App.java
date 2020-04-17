@@ -55,7 +55,7 @@ public class App {
     private static void initGlobalContext(PlaceHolderProperties extraProperties) {
         GlobalContext.GENERATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         if (StringUtils.isEmpty(extraProperties.getProperty("project.author"))) {
-            extraProperties.put("author", GlobalContext.AUTHOR);
+            extraProperties.put("author", GlobalContext.DEFAULT_AUTHOR);
         }
 
         extraProperties.put("generateTime", GlobalContext.GENERATE_TIME);

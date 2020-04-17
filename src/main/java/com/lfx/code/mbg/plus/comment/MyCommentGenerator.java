@@ -32,22 +32,14 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
                                      IntrospectedTable introspectedTable) {
 
         topLevelClass.addJavaDocLine("/**");
-        topLevelClass.addJavaDocLine(" * @author " + GlobalContext.AUTHOR);
+        topLevelClass.addJavaDocLine(" * @author " + GlobalContext.map.get("project.author"));
         topLevelClass.addJavaDocLine(" * @date " + GlobalContext.GENERATE_TIME);
         topLevelClass.addJavaDocLine(" */");
     }
 
-//    @Override
-//    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
-//        innerClass.addJavaDocLine("/**");
-//        innerClass.addJavaDocLine(" * @author " + GlobalContext.AUTHOR);
-//        innerClass.addJavaDocLine(" * @date " + GlobalContext.GENERATE_TIME);
-//        innerClass.addJavaDocLine(" */");
-//    }
-
-    // 属性的注释只包含数据库的列备注
     @Override
     public void addFieldComment(Field field, IntrospectedTable table, IntrospectedColumn column) {
+        // 属性的注释只包含数据库的列备注
         String remarks = column.getRemarks();
         if (StringUtility.stringHasValue(remarks)) {
             field.addJavaDocLine("/**"); //$NON-NLS-1$

@@ -22,7 +22,7 @@ public class MqMessage implements Serializable {
 public class MqMessage implements Serializable {
 ```
 
-- MapperOverIsMergeablePlugin
+- MapperOverIgnorePlugin
 	- xml文件存在时，不合并xml文件
 - MapperPlugin
 	- 删除xml文件指定方法，如: 项目集成了myabtis-plus，则xml文件不需要生成crud方法，该插件可将xml文件的所有crud方法都删除
@@ -34,9 +34,9 @@ public class MqMessage implements Serializable {
 
 ## 其它功能
 
-### 扫描数据库的所有表
+### 扫描schema下的所有表
 
-默认扫描数据库的所有表，对数据库下的所有表生成对应的mvc文件。也可通过其他配置参数来决定扫描表的策略。
+默认扫描schema下的所有表，生成对应的mvc文件。也可通过其他配置参数来决定扫描表的策略。
 
 ```properties
 ## 生成指定表
@@ -135,16 +135,16 @@ project.package.biz=
 
 ## 执行命令
 
+拷贝并修改配置文件init.properties
+
 ```shell
-
-拷贝init.properties
-
+## 打jar包
 > mvn clean install
 
-## windows
+## windows 执行
 > java -Dinit.path=D:\init.properties -jar code-mbg-plus.jar
 
-## linux
+## linux 执行
 > java -Dinit.path=/Users/apple/mywork/mbg-file/init.properties -jar code-mbg-plus.jar
 ```
 

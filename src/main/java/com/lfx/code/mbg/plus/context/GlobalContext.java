@@ -12,7 +12,7 @@ public class GlobalContext {
 
     public static String GENERATE_TIME;
 
-    public static String AUTHOR = "<a href=\"mailto:idler41@163.com\">idler41</a>";
+    public static final String DEFAULT_AUTHOR = "<a href=\"mailto:idler41@163.com\">idler41</a>";
 
     public static Map<String, String> map;
 

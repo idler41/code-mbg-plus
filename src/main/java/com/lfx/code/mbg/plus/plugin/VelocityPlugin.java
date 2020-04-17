@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -65,22 +66,13 @@ public class VelocityPlugin extends PluginAdapter {
             GlobalContext.map.put("domainName", domainName);
             GlobalContext.map.put("domainFullName", domainFullName);
 
-            // 生成模板前先生成所有模板的package,避免模板之间存在引用时没有package问题
-            for (File velocityFile : templateList) {
-                String shortFileName = getShortFileName(velocityFile);
-                String packageKey = String.format(AppConstants.TEMPLATE_PACKAGE_KEY, shortFileName);
-                String contextPackageKey = String.format(AppConstants.CONTEXT_PACKAGE_KEY, shortFileName);
-                String packageVal = GlobalContext.map.get(contextPackageKey);
-                GlobalContext.map.putIfAbsent(packageKey, packageVal);
-            }
-
             // 创建模板
             for (File velocityFile : templateList) {
                 String javaPath = GlobalContext.map.get("project.path.java");
                 String shortFileName = getShortFileName(velocityFile);
                 String contextPackageKey = String.format(AppConstants.CONTEXT_PACKAGE_KEY, shortFileName);
                 String packageVal = GlobalContext.map.get(contextPackageKey);
-                String targetName = javaPath + File.separator + packageVal.replace(".", File.separator) +
+                String targetName = javaPath + File.separator + packageVal.replace(AppConstants.DOT, File.separator) +
                         File.separator + domainName + velocityFile.getName();
                 flushFile(velocityFile, new File(targetName), GlobalContext.map);
             }
@@ -101,8 +93,9 @@ public class VelocityPlugin extends PluginAdapter {
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();
         }
-
-        VelocityContext vContext = new VelocityContext(context);
+        Map<String, Object> globalContext = new HashMap<>(context);
+        globalContext.put("context", context);
+        VelocityContext vContext = new VelocityContext(globalContext);
         try {
             Template template = ve.getTemplate(templateFile.getCanonicalPath(), AppConstants.UTF_8);
             //noinspection ResultOfMethodCallIgnored

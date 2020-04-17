@@ -7,6 +7,7 @@ package com.lfx.code.mbg.plus.constants;
 public class AppConstants {
     public static final String UTF_8 = "UTF-8";
 
-    public static final String TEMPLATE_PACKAGE_KEY = "%sPackage";
     public static final String CONTEXT_PACKAGE_KEY = "project.package.%s";
+
+    public static final String DOT = ".";
 }
