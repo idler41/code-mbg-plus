@@ -133,6 +133,20 @@ mbg.plugin.po.enable=false
 project.package.biz=
 ```
 
+## 执行命令
+
+```shell
+
+拷贝init.properties
+
+> mvn clean install
+
+## windows
+> java -Dinit.path=D:\init.properties -jar code-mbg-plus.jar
+
+## linux
+> java -Dinit.path=/Users/apple/mywork/mbg-file/init.properties -jar code-mbg-plus.jar
+```
 
 ## TODO
 
