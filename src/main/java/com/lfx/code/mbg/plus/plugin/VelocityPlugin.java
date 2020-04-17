@@ -4,6 +4,7 @@ import com.lfx.code.mbg.plus.constants.AppConstants;
 import com.lfx.code.mbg.plus.context.GlobalContext;
 import com.lfx.code.mbg.plus.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -19,10 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -32,15 +31,9 @@ import java.util.Properties;
 @Slf4j
 public class VelocityPlugin extends PluginAdapter {
 
-    private static final List<File> TEMPLATE_LIST;
-
     private static final VelocityEngine ve;
 
     static {
-        String velocityFolder = GlobalContext.map.get("template.home");
-        File folder = new File(velocityFolder);
-        TEMPLATE_LIST = Arrays.asList(Objects.requireNonNull(folder.listFiles()));
-
         Properties properties = new Properties();
         properties.setProperty(Velocity.OUTPUT_ENCODING, AppConstants.UTF_8);
         properties.setProperty(Velocity.INPUT_ENCODING, AppConstants.UTF_8);
@@ -56,6 +49,14 @@ public class VelocityPlugin extends PluginAdapter {
 
     @Override
     public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
+        String velocityFolder = GlobalContext.map.get("template.home");
+        File folder = new File(velocityFolder);
+        File[] templateList = folder.listFiles();
+        if (ArrayUtils.isEmpty(templateList)) {
+            log.warn("未找到模板:template.home={}", velocityFolder);
+            return null;
+        }
+
         for (GeneratedJavaFile javaFile : introspectedTable.getGeneratedJavaFiles()) {
             TopLevelClass topLevelClass = (TopLevelClass) javaFile.getCompilationUnit();
 
@@ -65,7 +66,7 @@ public class VelocityPlugin extends PluginAdapter {
             GlobalContext.map.put("domainFullName", domainFullName);
 
             // 生成模板前先生成所有模板的package,避免模板之间存在引用时没有package问题
-            for (File velocityFile : TEMPLATE_LIST) {
+            for (File velocityFile : templateList) {
                 String shortFileName = getShortFileName(velocityFile);
                 String packageKey = String.format(AppConstants.TEMPLATE_PACKAGE_KEY, shortFileName);
                 String contextPackageKey = String.format(AppConstants.CONTEXT_PACKAGE_KEY, shortFileName);
@@ -74,7 +75,7 @@ public class VelocityPlugin extends PluginAdapter {
             }
 
             // 创建模板
-            for (File velocityFile : TEMPLATE_LIST) {
+            for (File velocityFile : templateList) {
                 String javaPath = GlobalContext.map.get("project.path.java");
                 String shortFileName = getShortFileName(velocityFile);
                 String contextPackageKey = String.format(AppConstants.CONTEXT_PACKAGE_KEY, shortFileName);
