@@ -194,11 +194,13 @@ package com.demo.controller;
 import com.demo.biz.ActPromotionActivityBiz;
 import com.demo.domain.ActPromotionActivity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 /**
  * @author <a href="mailto:demo@163.com">demo</a>
- * @date 2020-04-18 10:13:07
+ * @date 2020-04-18 11:41:38
  */
 @RestController("/actPromotionActivity")
 @Slf4j
