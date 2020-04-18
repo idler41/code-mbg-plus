@@ -38,7 +38,7 @@ public class MqMessage implements Serializable {
 
 默认扫描schema下的所有表，生成对应的mvc文件。也可通过其他配置参数来决定扫描表的策略。
 
-```properties
+```java
 ## 生成指定表
 include.tables=t_user,t_role
 ## 不生成指定表
@@ -50,7 +50,7 @@ exclude.tables=t_user
 
 如表t_user生成实体类User.java
 
-```properties
+```java
 remove.table.prefix=t_
 ```
 
@@ -98,7 +98,7 @@ xml文件缩进由2个空格改为4个空格
 
 ## 启动参数文件模板
 
-```properties
+```java
 # 必填参数
 jdbc.driver=com.mysql.cj.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8
@@ -137,7 +137,7 @@ project.package.biz=
 
 拷贝并修改配置文件init.properties
 
-```shell
+```java
 ## 打jar包
 > mvn clean install
 
@@ -147,6 +147,66 @@ project.package.biz=
 ## linux 执行
 > java -Dinit.path=/Users/apple/mywork/mbg-file/init.properties -jar code-mbg-plus.jar
 ```
+
+## 手动添加模板示例
+
+1. init.properties添加配置信息
+
+```java
+project.package.controller=com.demo.controller
+```
+
+2. 在template.home路径添加模板文件：
+
+Controller.java
+
+```java
+#set($bizPackage = $context.get("project.package.biz"))
+#set($controllerPackage = $context.get("project.package.controller"))
+#set ($domain = $!domainName.substring(0,1).toLowerCase()+$!domainName.substring(1))
+package $!{controllerPackage};
+
+import $!{bizPackage}.$!{domainName}Biz;
+import $!{domainFullName};
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+/**
+ * @author $context.get("project.author")
+ * @date $!{generateTime}
+ */
+@RestController("/$!{domain}")
+@Slf4j
+public class $!{domainName}Controller {
+
+    @Autowired
+    private $!{domainName}Biz $!{domain}Biz;
+}
+```
+
+生成代码: XXController.java
+
+```java
+package com.demo.controller;
+
+import com.demo.biz.ActPromotionActivityBiz;
+import com.demo.domain.ActPromotionActivity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+/**
+ * @author <a href="mailto:demo@163.com">demo</a>
+ * @date 2020-04-18 10:13:07
+ */
+@RestController("/actPromotionActivity")
+@Slf4j
+public class ActPromotionActivityController {
+
+    @Autowired
+    private ActPromotionActivityBiz actPromotionActivityBiz;
+}
+```
+
 
 ## TODO
 
