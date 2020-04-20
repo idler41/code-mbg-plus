@@ -98,7 +98,7 @@ xml文件缩进由2个空格改为4个空格
 
 ## 启动参数文件模板
 
-```java
+```properties
 # 必填参数
 jdbc.driver=com.mysql.cj.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8
@@ -130,14 +130,16 @@ remove.table.prefix=
 
 file.ignore=false
 mbg.plugin.po.enable=false
-project.package.biz=
+project.package.biz=com.demo.biz
+project.package.controller=com.demo.controller
+project.author=
 ```
 
 ## 执行命令
 
 拷贝并修改配置文件init.properties
 
-```java
+```shell
 ## 打jar包
 > mvn clean install
 
@@ -152,7 +154,7 @@ project.package.biz=
 
 1. init.properties添加配置信息
 
-```java
+```properties
 project.package.controller=com.demo.controller
 ```
 
