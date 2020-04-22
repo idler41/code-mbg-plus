@@ -86,7 +86,7 @@ public class App {
             String k = key.toString().trim();
             String v = System.getProperty(k);
             // 系统变量覆盖参数
-            v = v == null ? extraProperties.getProperty(k).trim() : v;
+            v = StringUtils.isEmpty(v) ? extraProperties.getProperty(k).trim() : v;
             extraProperties.setProperty(k, v);
             if (log.isDebugEnabled()) {
                 log.debug("{}={}", k, v);

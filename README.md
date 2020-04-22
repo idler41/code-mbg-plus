@@ -48,10 +48,16 @@ exclude.tables=t_user
 
 ### 去除表名前缀
 
-如表t_user生成实体类User.java
+```java
+## t_user => User.java
+remove.table.prefix=t_
+```
+### 去除表名后缀
 
 ```java
+## t_user_16 => User.java
 remove.table.prefix=t_
+remove.table.suffix.regex=\\_\\d*$
 ```
 
 ### XML文件格式
@@ -216,11 +222,8 @@ public class ActPromotionActivityController {
 
 ## TODO
 
-1. 区分单库单表与分库分表场景
-	- 分库分表场景下,去除表后缀 t_user1生成对应的类名User.java
-	- 分库分表场景下@TableName注解为逻辑表名
-2. 自动生成crud的junit测试文件，提高项目的测试覆盖率
-3. 添加更多的模板
+1. 自动生成crud的junit测试文件，提高项目的测试覆盖率
+2. 添加更多的模板
 	- 带swagger和不带swagger注解的controller模板
 
 

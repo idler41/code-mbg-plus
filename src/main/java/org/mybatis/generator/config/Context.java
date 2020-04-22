@@ -41,8 +41,12 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static org.mybatis.generator.internal.util.StringUtility.composeFullyQualifiedTableName;
 import static org.mybatis.generator.internal.util.StringUtility.isTrue;
@@ -451,6 +455,9 @@ public class Context extends PropertyHolder {
              * lfx自定义开始: 生成所有表
              */
             if (tableConfigurations.size() == 1 && "*".equals(tableConfigurations.get(0).getTableName())) {
+                Set<String> cachedTableName = new HashSet<>();
+                boolean repeatRemove = Boolean.parseBoolean(GlobalContext.map.get("remove.table.repeat.name"));
+
                 tableConfigurations.clear();
                 GeneratedKey generatedKey = new GeneratedKey("id", "MySql", true, "java.lang.Long");
                 DatabaseMetaData dbmd = connection.getMetaData();
@@ -468,14 +475,25 @@ public class Context extends PropertyHolder {
                         }
                     }
 
-                    TableConfiguration tc = new TableConfiguration(this);
-                    tc.setGeneratedKey(generatedKey);
-                    tc.setTableName(tableName);
                     String newTableName = tableName;
                     String prefixTable = GlobalContext.map.get("remove.table.prefix");
                     if (prefixTable != null && tableName.startsWith(prefixTable)) {
                         newTableName = tableName.replaceFirst(prefixTable, StringUtils.EMPTY);
                     }
+                    String suffixRegex = GlobalContext.map.get("remove.table.suffix.regex");
+                    if (StringUtils.isNotEmpty(suffixRegex)) {
+                        newTableName = newTableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
+                    }
+                    if (repeatRemove) {
+                        if (cachedTableName.contains(newTableName)) {
+                            continue;
+                        }
+                        cachedTableName.add(newTableName);
+                    }
+
+                    TableConfiguration tc = new TableConfiguration(this);
+                    tc.setGeneratedKey(generatedKey);
+                    tc.setTableName(tableName);
                     tc.setDomainObjectName(JavaBeansUtil.getCamelCaseString(newTableName, true));
                     tableConfigurations.add(tc);
                 }
@@ -500,8 +518,12 @@ public class Context extends PropertyHolder {
                 }
 
                 callback.startTask(getString("Progress.1", tableName)); //$NON-NLS-1$
+
                 List<IntrospectedTable> tables = databaseIntrospector
                         .introspectTables(tc);
+
+                // 链接阿里云分库中的一个实例，会出现所有实例的库都扫描到的情况，不知是jdbc url配置问题还是其它问题。这里先直接去重
+                tables = tables.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(item -> item.getTableConfiguration().getTableName()))), ArrayList::new));
 
                 if (tables != null) {
                     introspectedTables.addAll(tables);

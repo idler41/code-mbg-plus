@@ -32,4 +32,14 @@ public class StringUtil {
         }
         return filename;
     }
+
+    public static void main(String[] args) {
+        String pattern = "\\_\\d*$";
+        System.out.println(pattern);
+        System.out.println("t_user_1".replaceFirst(pattern, ""));
+        System.out.println("t_user-1".replaceFirst(pattern, ""));
+        System.out.println("t_user_01".replaceFirst(pattern, ""));
+        System.out.println("t_user_10".replaceFirst(pattern, ""));
+        System.out.println("t_user_1a".replaceFirst(pattern, ""));
+    }
 }

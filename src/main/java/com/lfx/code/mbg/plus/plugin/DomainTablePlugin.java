@@ -1,6 +1,7 @@
 package com.lfx.code.mbg.plus.plugin;
 
 import com.lfx.code.mbg.plus.context.GlobalContext;
+import org.apache.commons.lang3.StringUtils;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
@@ -28,6 +29,10 @@ public class DomainTablePlugin extends PluginAdapter {
         if (TABLE_ENABLE) {
             topLevelClass.addImportedType("com.baomidou.mybatisplus.annotations.TableName");
             String tableName = introspectedTable.getTableConfiguration().getTableName();
+            String suffixRegex = GlobalContext.map.get("remove.table.suffix.regex");
+            if (StringUtils.isNotEmpty(suffixRegex)) {
+                tableName = tableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
+            }
             topLevelClass.addAnnotation("@TableName(\"" + tableName + "\")");
         }
         return true;
