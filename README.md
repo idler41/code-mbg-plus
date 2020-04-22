@@ -111,15 +111,20 @@ jdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8
 jdbc.username=root
 jdbc.password=root
 ## 生成项目路径
+### linux
 project.home=/Users/apple/mywork/micro-service
+### windows
+#project.home=G:\\mbg-file
 project.name=demo
 ## 生成domain包名
 project.package.model=com.demo.domain
 ## 生成mapper包名
 project.package.mapper=com.demo.mapper
 ## 模板路径
+### linux
 template.home=/Users/apple/GitHub/code-mbg-plus/src/main/resources/velocity
-
+### windows
+#template.home=G:\\mbg-file\\velocity
 
 # 选填参数
 project.path=${project.home}/${project.name}
@@ -132,8 +137,12 @@ include.tables=
 ## 不生成指定表
 exclude.tables=
 domain.table.enable=false
-remove.table.prefix=
+remove.table.prefix=t_
 
+## 去除表后缀, \\_\\d*$ (t_user_16 => t_user)
+remove.table.suffix.regex=\\_\\d*$
+## 分表场景，去除表后缀后可能存在重复表名, 设置为true则过滤掉重复的表
+remove.table.repeat.name=true
 file.ignore=false
 mbg.plugin.po.enable=false
 project.package.biz=com.demo.biz
