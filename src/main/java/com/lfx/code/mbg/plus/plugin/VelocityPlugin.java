@@ -45,7 +45,7 @@ public class VelocityPlugin extends PluginAdapter {
 
     @Override
     public boolean validate(List<String> warnings) {
-        return true;
+        return Boolean.parseBoolean(GlobalContext.map.get("plugin.velocity.enable"));
     }
 
     @Override

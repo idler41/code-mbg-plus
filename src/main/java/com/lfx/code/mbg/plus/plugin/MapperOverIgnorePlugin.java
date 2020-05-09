@@ -1,5 +1,6 @@
 package com.lfx.code.mbg.plus.plugin;
 
+import com.lfx.code.mbg.plus.context.GlobalContext;
 import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
@@ -14,7 +15,7 @@ import java.util.List;
 public class MapperOverIgnorePlugin extends PluginAdapter {
     @Override
     public boolean validate(List<String> warnings) {
-        return true;
+        return Boolean.parseBoolean(GlobalContext.map.get("plugin.mapper-ignore.enable"));
     }
 
     @Override

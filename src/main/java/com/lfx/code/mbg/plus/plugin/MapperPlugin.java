@@ -1,5 +1,6 @@
 package com.lfx.code.mbg.plus.plugin;
 
+import com.lfx.code.mbg.plus.context.GlobalContext;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.xml.Attribute;
@@ -19,7 +20,7 @@ public class MapperPlugin extends PluginAdapter {
 
     @Override
     public boolean validate(List<String> warnings) {
-        return true;
+        return Boolean.parseBoolean(GlobalContext.map.get("plugin.mapper.enable"));
     }
 
     @Override

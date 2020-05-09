@@ -13,28 +13,22 @@ import java.util.List;
  * @date 2020-04-13 16:03:42
  */
 public class DomainTablePlugin extends PluginAdapter {
-    private static final boolean TABLE_ENABLE;
-
-    static {
-        TABLE_ENABLE = Boolean.parseBoolean(GlobalContext.map.get("domain.table.enable"));
-    }
 
     @Override
     public boolean validate(List<String> list) {
-        return true;
+        return Boolean.parseBoolean(GlobalContext.map.get("plugin.table-name.enable"));
     }
 
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        if (TABLE_ENABLE) {
-            topLevelClass.addImportedType("com.baomidou.mybatisplus.annotations.TableName");
-            String tableName = introspectedTable.getTableConfiguration().getTableName();
-            String suffixRegex = GlobalContext.map.get("remove.table.suffix.regex");
-            if (StringUtils.isNotEmpty(suffixRegex)) {
-                tableName = tableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
-            }
-            topLevelClass.addAnnotation("@TableName(\"" + tableName + "\")");
+        topLevelClass.addImportedType("com.baomidou.mybatisplus.annotations.TableName");
+        String tableName = introspectedTable.getTableConfiguration().getTableName();
+        String suffixRegex = GlobalContext.map.get("remove.table.suffix.regex");
+        if (StringUtils.isNotEmpty(suffixRegex)) {
+            tableName = tableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
         }
+        topLevelClass.addAnnotation("@TableName(\"" + tableName + "\")");
+
         return true;
     }
 }

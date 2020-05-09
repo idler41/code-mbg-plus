@@ -61,8 +61,8 @@
         </sqlMapGenerator>
 
         <!--生成Dao类存放位置-->
-        <!--<javaClientGenerator type="XMLMAPPER" targetPackage="com.lfx.auth.mapper" targetProject="src/main/java">-->
-        <!--<property name="enableSubPackages" value="false"/>-->
+        <!--<javaClientGenerator type="XMLMAPPER" targetPackage="${project.package.mapper}" targetProject="${project.path.java}">-->
+            <!--<property name="enableSubPackages" value="false"/>-->
         <!--</javaClientGenerator>-->
 
         <!--生成对应表及类名-->

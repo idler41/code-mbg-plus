@@ -1,5 +1,6 @@
 package com.lfx.code.mbg.plus.plugin;
 
+import com.lfx.code.mbg.plus.context.GlobalContext;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
@@ -15,7 +16,7 @@ import java.util.List;
 public class LombokPlugin extends PluginAdapter {
     @Override
     public boolean validate(List<String> list) {
-        return true;
+        return Boolean.parseBoolean(GlobalContext.map.get("plugin.lombok.enable"));
     }
 
 
