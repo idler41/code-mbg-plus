@@ -132,22 +132,34 @@ project.path.java=${project.path}/src/main/java
 project.path.resources=${project.path}/src/main/resources
 project.path.test=${project.path}/src/main/test
 
+## 启用指定插件
+plugin.table-name.enable=true
+plugin.example.enable=true
+plugin.lombok.enable=true
+plugin.mapper.enable=true
+plugin.mapper-ignore.enable=true
+plugin.velocity.enable=true
+
 ## 生成指定表
 include.tables=
 ## 不生成指定表
 exclude.tables=
-domain.table.enable=false
 remove.table.prefix=t_
 
 ## 去除表后缀, \\_\\d*$ (t_user_16 => t_user)
 remove.table.suffix.regex=\\_\\d*$
 ## 分表场景，去除表后缀后可能存在重复表名, 设置为true则过滤掉重复的表
 remove.table.repeat.name=true
+
+## 生成的mapper方法
+## BaseResultMap,Example_Where_Clause,Update_By_Example_Where_Clause,Base_Column_List,selectByExample,selectByPrimaryKey,deleteByPrimaryKey,deleteByExample,insert,insertSelective,countByExample,updateByExampleSelective,updateByExample,updateByPrimaryKeySelective,updateByPrimaryKey
+mapper.id.include=BaseResultMap,Base_Column_List
+
 file.ignore=false
 mbg.plugin.po.enable=false
 project.package.biz=com.demo.biz
 project.package.controller=com.demo.controller
-project.author=
+project.author=<a href="mailto:demo@163.con">demo</a>
 ```
 
 ## 执行命令
