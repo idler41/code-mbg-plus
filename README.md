@@ -198,10 +198,7 @@ plugin.template.model.enable=true
 
 该模板启用后，mbg不会为每个表生成domain文件，而是改为模板插件生成domain文件。 如果关闭，则mbg会为每个表生成domain文件。 
 
-插件方式生成domain文件相比mbg有如下优点:
-
-1. 自由度更高,如属性可以添加一些mybatis-plus的注解
-2. 可以在不更改代码的情况下，随时更改模板。
+插件方式生成domain文件相比mbg优点: 自由度更高,可以在不更改代码的情况下，随时更改模板
 
 ## TODO
 
