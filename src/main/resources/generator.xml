@@ -20,13 +20,14 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
+        <!-- 注意VelocityPlugin配置位置放到最前面，避免其余的插件给TopLevelClass添加其它元素 -->
+        <plugin type="com.lfx.code.mbg.plus.plugin.VelocityPlugin"/>
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
-        <plugin type="com.lfx.code.mbg.plus.plugin.DomainTablePlugin"/>
-        <plugin type="com.lfx.code.mbg.plus.plugin.LombokPlugin"/>
+        <!--<plugin type="com.lfx.code.mbg.plus.plugin.DomainTablePlugin"/>-->
+        <!--<plugin type="com.lfx.code.mbg.plus.plugin.LombokPlugin"/>-->
         <plugin type="com.lfx.code.mbg.plus.plugin.ExamplePlugin"/>
         <plugin type="com.lfx.code.mbg.plus.plugin.MapperPlugin"/>
         <plugin type="com.lfx.code.mbg.plus.plugin.MapperOverIgnorePlugin"/>
-        <plugin type="com.lfx.code.mbg.plus.plugin.VelocityPlugin"/>
 
         <commentGenerator type="com.lfx.code.mbg.plus.comment.MyCommentGenerator">
             <!-- 这个元素用来去除指定生成的注释中是否包含生成的日期 false:表示保护 -->

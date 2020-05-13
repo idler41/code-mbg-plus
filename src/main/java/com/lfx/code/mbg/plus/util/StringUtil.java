@@ -23,6 +23,21 @@ public class StringUtil {
         return str.substring(0, 1).toLowerCase() + str.substring(1);
     }
 
+    public static String toUpperCaseOfFirst(String str) {
+        //如果字符串str为null和""则返回原数据
+        if (StringUtils.isEmpty(str)) {
+            return str;
+        }
+
+        if (str.length() == 1) {
+            //如果字符串str的长度为1，则调用专门把字符串转换为小写的string方法tuUpperCase()
+            return str.toUpperCase();
+        }
+        //用字符串截取方法subString()截取第一个字符并调用toUpperCase()方法把它转换为小写字母
+        //再与从str第二个下标截取的字符串拼接
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
     public static String getFileNameNoEx(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
@@ -31,6 +46,21 @@ public class StringUtil {
             }
         }
         return filename;
+    }
+
+    public static String replaceLast(String string, String match, String replace) {
+        if (StringUtils.isBlank(string) || null == replace) {
+            //参数不合法，原样返回
+            return string;
+        }
+
+        StringBuilder sBuilder = new StringBuilder(string);
+        int lastIndexOf = sBuilder.lastIndexOf(match);
+        if (-1 == lastIndexOf) {
+            return string;
+        }
+
+        return sBuilder.replace(lastIndexOf, lastIndexOf + match.length(), replace).toString();
     }
 
     public static void main(String[] args) {

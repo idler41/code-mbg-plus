@@ -451,9 +451,10 @@ public class Context extends PropertyHolder {
             DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(
                     this, connection.getMetaData(), javaTypeResolver, warnings);
 
-            /**
-             * lfx自定义开始: 生成所有表
-             */
+            //lfx自定义处理: 添加表格中文注释
+            String catalog = connection.getCatalog();
+
+            //lfx自定义处理: 生成所有表
             if (tableConfigurations.size() == 1 && "*".equals(tableConfigurations.get(0).getTableName())) {
                 Set<String> cachedTableName = new HashSet<>();
                 boolean repeatRemove = Boolean.parseBoolean(GlobalContext.map.get("remove.table.repeat.name"));
@@ -498,9 +499,7 @@ public class Context extends PropertyHolder {
                     tableConfigurations.add(tc);
                 }
             }
-            /**
-             * lfx自定义结束: 生成所有表
-             */
+            //lfx自定义处理: 生成所有表
 
             for (TableConfiguration tc : tableConfigurations) {
                 String tableName = composeFullyQualifiedTableName(tc.getCatalog(), tc
@@ -526,6 +525,17 @@ public class Context extends PropertyHolder {
                 tables = tables.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(item -> item.getTableConfiguration().getTableName()))), ArrayList::new));
 
                 if (tables != null) {
+                    //lfx自定义处理: 添加表格中文注释
+                    if (catalog != null) {
+                        for (IntrospectedTable introspectedTable : tables) {
+                            ResultSet resultSet = connection.createStatement().executeQuery("SHOW TABLE STATUS LIKE '" + tableName + "'");
+                            while (resultSet.next()) {
+                                introspectedTable.setRemarks(resultSet.getString("COMMENT"));
+                            }
+                            introspectedTable.setAttribute("MyCatalog", catalog);
+                        }
+                    }
+
                     introspectedTables.addAll(tables);
                 }
 

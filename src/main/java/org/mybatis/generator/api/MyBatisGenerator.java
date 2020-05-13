@@ -284,7 +284,10 @@ public class MyBatisGenerator {
 
             for (GeneratedJavaFile gjf : generatedJavaFiles) {
                 projects.add(gjf.getTargetProject());
-                writeGeneratedJavaFile(gjf, callback);
+                if (!Boolean.parseBoolean(GlobalContext.map.get("plugin.velocity.template.model.enable"))) {
+                    // //lfx自定义：开启model插件,则mbg不生成model
+                    writeGeneratedJavaFile(gjf, callback);
+                }
             }
 
             for (String project : projects) {

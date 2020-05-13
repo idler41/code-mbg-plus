@@ -25,15 +25,15 @@ public class LombokPlugin extends PluginAdapter {
 
         //添加domain的import
         topLevelClass.addImportedType("lombok.Data");
-        topLevelClass.addImportedType("lombok.NoArgsConstructor");
-        topLevelClass.addImportedType("lombok.AllArgsConstructor");
-        topLevelClass.addImportedType("lombok.Builder");
+//        topLevelClass.addImportedType("lombok.NoArgsConstructor");
+//        topLevelClass.addImportedType("lombok.AllArgsConstructor");
+//        topLevelClass.addImportedType("lombok.Builder");
 
         //添加domain的注解
         topLevelClass.addAnnotation("@Data");
-        topLevelClass.addAnnotation("@NoArgsConstructor");
-        topLevelClass.addAnnotation("@AllArgsConstructor");
-        topLevelClass.addAnnotation("@Builder");
+//        topLevelClass.addAnnotation("@NoArgsConstructor");
+//        topLevelClass.addAnnotation("@AllArgsConstructor");
+//        topLevelClass.addAnnotation("@Builder");
         return true;
     }
 
