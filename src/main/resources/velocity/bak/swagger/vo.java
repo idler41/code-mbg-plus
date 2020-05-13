@@ -1,4 +1,4 @@
-#set($voPackage = $context.get("project.package.vo"))
+#set($voPackage = $context.get("plugin.template.vo.package"))
 package $!{voPackage};
 
 import io.swagger.annotations.ApiModel;

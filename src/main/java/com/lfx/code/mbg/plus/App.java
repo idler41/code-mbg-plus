@@ -60,13 +60,13 @@ public class App {
 
         extraProperties.put("generateTime", GlobalContext.GENERATE_TIME);
 
-        String includeTable = extraProperties.getProperty("include.tables");
+        String includeTable = extraProperties.getProperty("tables.include");
         if (StringUtils.isNotEmpty(includeTable)) {
             String[] tables = includeTable.split(",");
             GlobalContext.includeTable.addAll(Arrays.asList(tables));
         }
 
-        String excludeTable = extraProperties.getProperty("exclude.tables");
+        String excludeTable = extraProperties.getProperty("tables.exclude");
         if (StringUtils.isNotEmpty(excludeTable)) {
             String[] tables = excludeTable.split(",");
             GlobalContext.excludeTable.addAll(Arrays.asList(tables));
@@ -104,27 +104,33 @@ public class App {
         for (String param : PARAM_NOT_NULL) {
             if (StringUtils.isEmpty(extraProperties.getProperty(param))) {
                 log.error("key={},value=null,请参考提示，输入必要参数!", param);
-                log.error("## linux 必填模板\n" +
-                        "-Djdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8\n" +
-                        "-Djdbc.username=root\n" +
-                        "-Djdbc.password=root\n" +
-                        "-Dproject.home=/Users/apple/mywork/micro-service\n" +
-                        "-Dproject.name=demo\n" +
-                        "-Dproject.package.model=com.demo.domain\n" +
-                        "-Dproject.package.mapper=com.demo.mapper\n" +
-                        "-Dproject.package.biz=com.demo.biz\n" +
-                        "-Dtemplate.home=/Users/apple/GitHub/code-mbg-plus/src/main/resources/velocity");
-
-                log.error("## windows 必填模板\n" +
-                        "-Djdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8\n" +
-                        "-Djdbc.username=root\n" +
-                        "-Djdbc.password=root\n" +
-                        "-Dproject.home=G:\\mbg-file\n" +
-                        "-Dproject.name=demo\n" +
-                        "-Dproject.package.model=com.demo.domain\n" +
-                        "-Dproject.package.mapper=com.demo.mapper\n" +
-                        "-Dproject.package.biz=com.demo.biz\n" +
-                        "-Dtemplate.home=D:\\workspace\\code-mbg-plus\\src\\main\\resources\\velocity");
+                log.error("############################ 必填参数 ############################\n" +
+                        "jdbc.driver=com.mysql.cj.jdbc.Driver\n" +
+                        "jdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8\n" +
+                        "jdbc.username=root\n" +
+                        "jdbc.password=root\n" +
+                        "\n" +
+                        "## 模板路径\n" +
+                        "### linux\n" +
+                        "template.home=/Users/apple/GitHub/code-mbg-plus/src/main/resources/velocity\n" +
+                        "### windows\n" +
+                        "#template.home=G:\\\\mbg-file\\\\velocity\n" +
+                        "## 生成项目路径\n" +
+                        "### linux\n" +
+                        "project.home=/Users/apple/mywork/micro-service\n" +
+                        "### windows\n" +
+                        "#project.home=G:\\\\mbg-file\n" +
+                        "project.name=demo\n" +
+                        "## 生成domain包名\n" +
+                        "project.package.model=com.demo.domain\n" +
+                        "## 生成mapper包名\n" +
+                        "project.package.mapper=com.demo.mapper\n" +
+                        "\n" +
+                        "project.path=${project.home}/${project.name}\n" +
+                        "project.path.java=${project.path}/src/main/java\n" +
+                        "project.path.resources=${project.path}/src/main/resources\n" +
+                        "project.path.test=${project.path}/src/main/test\n" +
+                        "############################ 必填参数 ############################");
                 throw new IllegalArgumentException();
             }
         }

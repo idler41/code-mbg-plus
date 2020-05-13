@@ -457,7 +457,6 @@ public class Context extends PropertyHolder {
             //lfx自定义处理: 生成所有表
             if (tableConfigurations.size() == 1 && "*".equals(tableConfigurations.get(0).getTableName())) {
                 Set<String> cachedTableName = new HashSet<>();
-                boolean repeatRemove = Boolean.parseBoolean(GlobalContext.map.get("remove.table.repeat.name"));
 
                 tableConfigurations.clear();
                 GeneratedKey generatedKey = new GeneratedKey("id", "MySql", true, "java.lang.Long");
@@ -477,20 +476,20 @@ public class Context extends PropertyHolder {
                     }
 
                     String newTableName = tableName;
-                    String prefixTable = GlobalContext.map.get("remove.table.prefix");
+                    String prefixTable = GlobalContext.map.get("table.remove.prefix");
                     if (prefixTable != null && tableName.startsWith(prefixTable)) {
                         newTableName = tableName.replaceFirst(prefixTable, StringUtils.EMPTY);
                     }
-                    String suffixRegex = GlobalContext.map.get("remove.table.suffix.regex");
+                    String suffixRegex = GlobalContext.map.get("table.remove.suffix.regex");
                     if (StringUtils.isNotEmpty(suffixRegex)) {
                         newTableName = newTableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
                     }
-                    if (repeatRemove) {
-                        if (cachedTableName.contains(newTableName)) {
-                            continue;
-                        }
-                        cachedTableName.add(newTableName);
+
+                    //lfx自定义处理: 过滤掉重复的表: 分表场景，去除表后缀后可能存在重复表名
+                    if (cachedTableName.contains(newTableName)) {
+                        continue;
                     }
+                    cachedTableName.add(newTableName);
 
                     TableConfiguration tc = new TableConfiguration(this);
                     tc.setGeneratedKey(generatedKey);

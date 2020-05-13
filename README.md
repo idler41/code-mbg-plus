@@ -4,69 +4,53 @@
 
 ## 自定义插件
 
-- LombokPlugin
-	- 实体类添加lombok注解
-
-```java
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class MqMessage implements Serializable {
-```
-- DomainTablePlugin
-	- domain类添加mybatis-plus注解@TableName，默认关闭，可通过参数domain.table.enable=true开启
-
-```java
-@TableName("mq_message")
-public class MqMessage implements Serializable {
-```
-
 - MapperOverIgnorePlugin
 	- xml文件存在时，不合并xml文件
 - MapperPlugin
 	- 删除xml文件指定方法，如: 项目集成了myabtis-plus，则xml文件不需要生成crud方法，该插件可将xml文件的所有crud方法都删除
-
 - ExamplePlugin
 	- 不生成example类 
+- LombokPlugin
+	- 实体类添加lombok注解
 - VelocityPlugin
 	- 根据模板文件，为每个bean生成对应的文件，如: 对应的mvc
+	- resources/velocity目录下有模板示例
 
-## 其它功能
+
+## 自定义功能
 
 ### 扫描schema下的所有表
 
 默认扫描schema下的所有表，生成对应的mvc文件。也可通过其他配置参数来决定扫描表的策略。
 
-```java
+```properties
 ## 生成指定表
-include.tables=t_user,t_role
+tables.include=t_user,t_role
 ## 不生成指定表
-exclude.tables=t_user
+tables.exclude=t_user
 ```
-同时配置include.tables和exclude.tables时只有include.tables会生效。
+同时配置tables.include和tables.exclude时只有tables.include会生效。
 
-### 去除表名前缀
+### 表名特殊处理
 
-```java
-## t_user => User.java
-remove.table.prefix=t_
-```
-### 去除表名后缀
-
-```java
-## t_user_16 => User.java
-remove.table.prefix=t_
-remove.table.suffix.regex=\\_\\d*$
+```properties
+## 去除表前缀
+table.remove.prefix=t_
+## 去除表后缀, \\_\\d*$ (t_user_16 => t_user)
+table.remove.suffix.regex=\\_\\d*$
 ```
 
-### XML文件格式
+### 配置mapper.xml生成指定元素
 
-xml文件缩进由2个空格改为4个空格
+```
+## BaseResultMap,Example_Where_Clause,Update_By_Example_Where_Clause,Base_Column_List,selectByExample,selectByPrimaryKey,deleteByPrimaryKey,deleteByExample,insert,insertSelective,countByExample,updateByExampleSelective,updateByExample,updateByPrimaryKeySelective,updateByPrimaryKey
+mapper.id.include=BaseResultMap,Base_Column_List
+```
 
-### 添加字段备注
 
-所有的domain类都自动生成备注数据，如: 
+### 生成字段备注
+
+所有的domain类或模板都可生成备注信息，如: 
 
 ```java
     /**
@@ -87,16 +71,22 @@ xml文件缩进由2个空格改为4个空格
 
 ### 添加作者信息
 
-所有class文件添加如下文件头, 可通过project.author指定@author value
+```properties
+project.author=<a href="mailto:demo@163.con">demo</a>
+```
 
 ```java
 /**
- * @author <a href="mailto:idler41@163.com">idler41</a>
+ * @author <a href="mailto:demo@163.com">demo</a>
  * @date 2020-04-13 23:28:56
  */
  public class XXX
 
 ```
+
+### XML文件格式
+
+xml文件缩进由2个空格改为4个空格
 
 ### 自动创建目录
 
@@ -105,11 +95,17 @@ xml文件缩进由2个空格改为4个空格
 ## 启动参数文件模板
 
 ```properties
-# 必填参数
+############################ 必填参数 ############################
 jdbc.driver=com.mysql.cj.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8
 jdbc.username=root
 jdbc.password=root
+
+## 模板路径
+### linux
+template.home=/Users/apple/GitHub/code-mbg-plus/src/main/resources/velocity
+### windows
+#template.home=G:\\mbg-file\\velocity
 ## 生成项目路径
 ### linux
 project.home=/Users/apple/mywork/micro-service
@@ -120,46 +116,50 @@ project.name=demo
 project.package.model=com.demo.domain
 ## 生成mapper包名
 project.package.mapper=com.demo.mapper
-## 模板路径
-### linux
-template.home=/Users/apple/GitHub/code-mbg-plus/src/main/resources/velocity
-### windows
-#template.home=G:\\mbg-file\\velocity
 
-# 选填参数
 project.path=${project.home}/${project.name}
 project.path.java=${project.path}/src/main/java
 project.path.resources=${project.path}/src/main/resources
 project.path.test=${project.path}/src/main/test
+############################ 必填参数 ############################
 
-## 启用指定插件
-plugin.table-name.enable=true
-plugin.example.enable=true
-plugin.lombok.enable=true
-plugin.mapper.enable=true
-plugin.mapper-ignore.enable=true
-plugin.velocity.enable=true
-
-## 生成指定表
-include.tables=
-## 不生成指定表
-exclude.tables=
-remove.table.prefix=t_
-
-## 去除表后缀, \\_\\d*$ (t_user_16 => t_user)
-remove.table.suffix.regex=\\_\\d*$
-## 分表场景，去除表后缀后可能存在重复表名, 设置为true则过滤掉重复的表
-remove.table.repeat.name=true
-
+############################ 选填参数 ############################
+project.author=<a href="mailto:demo@163.con">demo</a>
+file.ignore=true
 ## 生成的mapper方法
 ## BaseResultMap,Example_Where_Clause,Update_By_Example_Where_Clause,Base_Column_List,selectByExample,selectByPrimaryKey,deleteByPrimaryKey,deleteByExample,insert,insertSelective,countByExample,updateByExampleSelective,updateByExample,updateByPrimaryKeySelective,updateByPrimaryKey
 mapper.id.include=BaseResultMap,Base_Column_List
 
-file.ignore=false
-mbg.plugin.po.enable=false
-project.package.biz=com.demo.biz
-project.package.controller=com.demo.controller
-project.author=<a href="mailto:demo@163.con">demo</a>
+## 生成指定表
+tables.include=
+## 不生成指定表
+tables.exclude=
+## 去除表前缀
+table.remove.prefix=t_
+## 去除表后缀, \\_\\d*$ (t_user_16 => t_user)
+table.remove.suffix.regex=\\_\\d*$
+
+## 启用指定插件
+plugin.example.enable=true
+plugin.lombok.enable=true
+plugin.mapper.enable=true
+plugin.mapper-ignore.enable=true
+plugin.template.enable=true
+
+### velocity启动模板
+plugin.template.biz.enable=true
+plugin.template.biz.package=com.demo.biz
+plugin.template.mapper.enable=true
+plugin.template.mapper.package=${project.package.mapper}
+plugin.template.model.enable=true
+plugin.template.model.package=${project.package.model}
+plugin.template.controller.enable=true
+plugin.template.controller.package=com.demo.controller
+plugin.template.po.enable=true
+plugin.template.po.package=com.demo.controller.po
+plugin.template.vo.enable=true
+plugin.template.vo.package=com.demo.controller.vo
+############################ 选填参数 ############################
 ```
 
 ## 执行命令
@@ -177,75 +177,32 @@ project.author=<a href="mailto:demo@163.con">demo</a>
 > java -Dinit.path=/Users/apple/mywork/mbg-file/init.properties -jar code-mbg-plus.jar
 ```
 
-## 手动添加模板示例
+## 模板详解
 
-1. init.properties添加配置信息
+### 添加新模板步骤
+
+1. 在配置属性template.home的路径下添加模板文件
+2. 添加模板参数配置(假如该模板文件名称为xx.java)
+	1. 启用该插件: plugin.xx.enable=true
+	2. 插件所属package： plugin.template.xx.package=
+
+### 特殊模板: model.java
+
+在template.home的路径下添加名称为model.java的模板文件
+
+配置参数启用:
 
 ```properties
-project.package.controller=com.demo.controller
+plugin.template.model.enable=true
 ```
 
-2. 在template.home路径添加模板文件：
+该模板启用后，mbg不会为每个表生成domain文件，而是改为模板插件生成domain文件。 如果关闭，则mbg会为每个表生成domain文件。 
 
-Controller.java
-
-```java
-#set($bizPackage = $context.get("project.package.biz"))
-#set($controllerPackage = $context.get("project.package.controller"))
-#set ($domain = $!domainName.substring(0,1).toLowerCase()+$!domainName.substring(1))
-package $!{controllerPackage};
-
-import $!{bizPackage}.$!{domainName}Biz;
-import $!{domainFullName};
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-/**
- * @author $context.get("project.author")
- * @date $!{generateTime}
- */
-@RestController("/$!{domain}")
-@Slf4j
-public class $!{domainName}Controller {
-
-    @Autowired
-    private $!{domainName}Biz $!{domain}Biz;
-}
-```
-
-生成代码: XXController.java
-
-```java
-package com.demo.controller;
-
-import com.demo.biz.ActPromotionActivityBiz;
-import com.demo.domain.ActPromotionActivity;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-/**
- * @author <a href="mailto:demo@163.com">demo</a>
- * @date 2020-04-18 11:41:38
- */
-@RestController("/actPromotionActivity")
-@Slf4j
-public class ActPromotionActivityController {
-
-    @Autowired
-    private ActPromotionActivityBiz actPromotionActivityBiz;
-}
-```
-
+插件方式生成domain文件自由度更高，可以在不更改代码的情况下，随时更改模板。
 
 ## TODO
 
-1. 自动生成crud的junit测试文件，提高项目的测试覆盖率
-2. 添加更多的模板
-	- 带swagger和不带swagger注解的controller模板
+1. 添加junit模板文件，并在指定路径生成，提高项目的测试覆盖率
 
 
 

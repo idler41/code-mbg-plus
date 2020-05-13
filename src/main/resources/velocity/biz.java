@@ -1,5 +1,5 @@
 #set($mapperPackage = $context.get("project.package.mapper"))
-#set($bizPackage = $context.get("project.package.biz"))
+#set($bizPackage = $context.get("plugin.template.biz.package"))
 package $!{bizPackage};
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;

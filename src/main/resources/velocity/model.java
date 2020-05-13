@@ -1,4 +1,4 @@
-#set($domainPackage = $context.get("project.package.model"))
+#set($domainPackage = $context.get("plugin.template.model.package"))
 package $!{domainPackage};
 
 import lombok.Data;

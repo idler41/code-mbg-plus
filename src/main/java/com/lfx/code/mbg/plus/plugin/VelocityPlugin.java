@@ -53,7 +53,7 @@ public class VelocityPlugin extends PluginAdapter {
 
     @Override
     public boolean validate(List<String> warnings) {
-        return Boolean.parseBoolean(GlobalContext.map.get("plugin.velocity.enable"));
+        return Boolean.parseBoolean(GlobalContext.map.get("plugin.template.enable"));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class VelocityPlugin extends PluginAdapter {
             originClassParam.getOriginClassFieldList().add(originClassField);
         }
         // 不直接缓存TopLevelClass，因为引用的对象有可能会被其他插件修改
-        putTopLevelClassCache(domainName, originClassParam);
+        putClassParamCache(domainName, originClassParam);
         return true;
     }
 
@@ -96,31 +96,34 @@ public class VelocityPlugin extends PluginAdapter {
             String domainFullName = topLevelClass.getType().getFullyQualifiedName();
             GlobalContext.map.put("domainName", domainName);
             GlobalContext.map.put("domainFullName", domainFullName);
-            OriginClassParam originClassParam = getTopLevelClassFromCache(domainName);
+            OriginClassParam originClassParam = getClassParamFromCache(domainName);
             originClassParam.setTableRemark(StringUtil.replaceLast(introspectedTable.getRemarks(), "表", StringUtils.EMPTY));
             // 创建模板
-            for (File velocityFile : templateList) {
-                String shortFileName = getShortFileName(velocityFile);
-                String enableKey = String.format(AppConstants.PLUGIN_TEMPLATE_ENABLE_KEY, shortFileName);
+            for (File templateFile : templateList) {
+                String shortTemplateFileName = getShortFileName(templateFile);
+                String enableKey = String.format(AppConstants.PLUGIN_TEMPLATE_ENABLE_KEY, shortTemplateFileName);
                 if (Boolean.parseBoolean(GlobalContext.map.get(enableKey))) {
-                    String javaPath = GlobalContext.map.get("project.path.java");
-                    String contextPackageKey = String.format(AppConstants.CONTEXT_PACKAGE_KEY, shortFileName);
-                    String packageVal = GlobalContext.map.get(contextPackageKey);
-                    String velocityFileName = "model".equals(shortFileName) ? ".java" : (StringUtil.toUpperCaseOfFirst(shortFileName) + ".java");
-                    String targetName = javaPath + File.separator + packageVal.replace(AppConstants.DOT, File.separator) +
-                            File.separator + domainName + velocityFileName;
-                    flushFile(velocityFile, new File(targetName), GlobalContext.map, originClassParam);
+                    String targetName = resolveTargetFileName(shortTemplateFileName, domainName);
+                    flushFile(templateFile, new File(targetName), GlobalContext.map, originClassParam);
                 }
             }
         }
         return null;
     }
 
-    private void putTopLevelClassCache(String domainName, OriginClassParam originClassParam) {
+    private String resolveTargetFileName(String shortTemplateFileName, String domainName) {
+        String javaPath = GlobalContext.map.get("project.path.java");
+        String packageVal = GlobalContext.map.get(String.format(AppConstants.PLUGIN_TEMPLATE_PACKAGE_KEY, shortTemplateFileName));
+        String velocityFileName = "model".equals(shortTemplateFileName) ? ".java" : (StringUtil.toUpperCaseOfFirst(shortTemplateFileName) + ".java");
+        return javaPath + File.separator + packageVal.replace(AppConstants.DOT, File.separator) +
+                File.separator + domainName + velocityFileName;
+    }
+
+    private void putClassParamCache(String domainName, OriginClassParam originClassParam) {
         classCache.put("topLevelClass-" + domainName, originClassParam);
     }
 
-    private OriginClassParam getTopLevelClassFromCache(String domainName) {
+    private OriginClassParam getClassParamFromCache(String domainName) {
         return classCache.get("topLevelClass-" + domainName);
     }
 

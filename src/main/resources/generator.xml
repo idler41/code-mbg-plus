@@ -23,8 +23,7 @@
         <!-- 注意VelocityPlugin配置位置放到最前面，避免其余的插件给TopLevelClass添加其它元素 -->
         <plugin type="com.lfx.code.mbg.plus.plugin.VelocityPlugin"/>
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
-        <!--<plugin type="com.lfx.code.mbg.plus.plugin.DomainTablePlugin"/>-->
-        <!--<plugin type="com.lfx.code.mbg.plus.plugin.LombokPlugin"/>-->
+        <plugin type="com.lfx.code.mbg.plus.plugin.LombokPlugin"/>
         <plugin type="com.lfx.code.mbg.plus.plugin.ExamplePlugin"/>
         <plugin type="com.lfx.code.mbg.plus.plugin.MapperPlugin"/>
         <plugin type="com.lfx.code.mbg.plus.plugin.MapperOverIgnorePlugin"/>
