@@ -6,6 +6,7 @@ import com.lfx.code.mbg.plus.plugin.context.OriginClassField;
 import com.lfx.code.mbg.plus.plugin.context.OriginClassParam;
 import com.lfx.code.mbg.plus.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
@@ -25,11 +26,14 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:idler41@163.com">idler41</a>
@@ -91,16 +95,16 @@ public class VelocityPlugin extends PluginAdapter {
 
         for (GeneratedJavaFile javaFile : introspectedTable.getGeneratedJavaFiles()) {
             TopLevelClass topLevelClass = (TopLevelClass) javaFile.getCompilationUnit();
-
             String domainName = topLevelClass.getType().getShortName();
             String domainFullName = topLevelClass.getType().getFullyQualifiedName();
+            OriginClassParam originClassParam = getClassParamFromCache(domainName);
             GlobalContext.map.put("domainName", domainName);
             GlobalContext.map.put("domainFullName", domainFullName);
-            OriginClassParam originClassParam = getClassParamFromCache(domainName);
             originClassParam.setTableRemark(StringUtil.replaceLast(introspectedTable.getRemarks(), "表", StringUtils.EMPTY));
             // 创建模板
             for (File templateFile : templateList) {
                 String shortTemplateFileName = getShortFileName(templateFile);
+                doFilter(shortTemplateFileName, originClassParam);
                 String enableKey = String.format(AppConstants.PLUGIN_TEMPLATE_ENABLE_KEY, shortTemplateFileName);
                 if (Boolean.parseBoolean(GlobalContext.map.get(enableKey))) {
                     String targetName = resolveTargetFileName(shortTemplateFileName, domainName);
@@ -109,6 +113,51 @@ public class VelocityPlugin extends PluginAdapter {
             }
         }
         return null;
+    }
+
+    private Set<String> filterSet;
+
+    private void doFilter(String shortTemplateFileName, OriginClassParam originClassParam) {
+        if (StringUtils.isBlank(GlobalContext.map.get("plugin.template.field.exclude.filter"))) {
+            return;
+        }
+
+        if (filterSet == null) {
+            filterSet = new HashSet<>(Arrays.asList(GlobalContext.map.get("plugin.template.field.exclude.filter").split(",")));
+        }
+
+        if (!filterSet.contains(shortTemplateFileName)) {
+            return;
+        }
+        String key = String.format(AppConstants.PLUGIN_TEMPLATE_FIELD_EXCLUDE_KEY, shortTemplateFileName);
+        if (StringUtils.isBlank(GlobalContext.map.get(key))) {
+            return;
+        }
+        String[] excludeFields = GlobalContext.map.get(key).split(",");
+        if (excludeFields.length == 0) {
+            return;
+        }
+
+        Map<String, Long> typeCountMap = originClassParam.getOriginClassFieldList().stream().collect(Collectors.groupingBy(OriginClassField::getFieldType, Collectors.counting()));
+        Map<String, String> fieldNameTypeMap = originClassParam.getOriginClassFieldList().stream().collect(Collectors.toMap(OriginClassField::getFieldName, OriginClassField::getFieldType));
+        int size = originClassParam.getOriginClassFieldList().size();
+        Map<String, Integer> indexMap = new HashMap<>(size);
+        for (int i = 0; i < size; i++) {
+            indexMap.put(originClassParam.getOriginClassFieldList().get(i).getFieldName(), i);
+        }
+
+        List<OriginClassField> delList = new ArrayList<>(excludeFields.length);
+        for (String excludeField : excludeFields) {
+            String fieldType = fieldNameTypeMap.get(excludeField);
+            Long importTimes = typeCountMap.get(fieldType);
+            importTimes--;
+            if (importTimes.equals(0L)) {
+                originClassParam.getFieldImportList().remove(fieldType);
+            }
+            int index = indexMap.get(excludeField);
+            delList.add(originClassParam.getOriginClassFieldList().get(index));
+        }
+        originClassParam.getOriginClassFieldList().removeAll(delList);
     }
 
     private String resolveTargetFileName(String shortTemplateFileName, String domainName) {

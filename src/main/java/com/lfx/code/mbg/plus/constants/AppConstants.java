@@ -12,4 +12,6 @@ public class AppConstants {
     public static final String PLUGIN_TEMPLATE_ENABLE_KEY = "plugin.template.%s.enable";
 
     public static final String PLUGIN_TEMPLATE_PACKAGE_KEY = "plugin.template.%s.package";
+
+    public static final String PLUGIN_TEMPLATE_FIELD_EXCLUDE_KEY = "plugin.template.%s.field.exclude";
 }
