@@ -183,7 +183,7 @@ plugin.template.vo.package=com.demo.controller.vo
 
 1. 在配置属性template.home的路径下添加模板文件
 2. 添加模板参数配置(假如该模板文件名称为xx.java)
-	1. 启用该插件: plugin.xx.enable=true
+	1. 启用该插件: plugin.template.xx.enable=true
 	2. 模板生成到指定package： plugin.template.xx.package=
 
 ### 特殊模板: model.java
