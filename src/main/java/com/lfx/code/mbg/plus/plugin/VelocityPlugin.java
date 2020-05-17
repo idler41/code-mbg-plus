@@ -67,8 +67,8 @@ public class VelocityPlugin extends PluginAdapter {
         OriginClassParam originClassParam = new OriginClassParam();
         originClassParam.setJavaDocLines(topLevelClass.getJavaDocLines());
         originClassParam.setFieldImportList(new HashSet<>());
-        originClassParam.setOriginClassFieldList(new ArrayList<>(introspectedTable.getBaseColumns().size()));
-        for (IntrospectedColumn column : introspectedTable.getBaseColumns()) {
+        originClassParam.setOriginClassFieldList(new ArrayList<>(introspectedTable.getAllColumns().size()));
+        for (IntrospectedColumn column : introspectedTable.getAllColumns()) {
             if (column.getFullyQualifiedJavaType().isExplicitlyImported()) {
                 originClassParam.getFieldImportList().add(column.getFullyQualifiedJavaType().getFullyQualifiedName());
             }
