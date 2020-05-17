@@ -1,7 +1,7 @@
 #set($mapperPackage = $context.get("project.package.mapper"))
 package $!{mapperPackage};
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import $!{domainFullName};
 import org.springframework.stereotype.Repository;
 
