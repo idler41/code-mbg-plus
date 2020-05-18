@@ -13,6 +13,11 @@ import java.util.Set;
 public class OriginClassParam {
 
     /**
+     * 对应的表名称
+     */
+    private String tableName;
+
+    /**
      * 对应的表备注
      */
     private String tableRemark;

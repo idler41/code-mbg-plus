@@ -68,6 +68,13 @@ public class VelocityPlugin extends PluginAdapter {
         originClassParam.setJavaDocLines(topLevelClass.getJavaDocLines());
         originClassParam.setFieldImportList(new HashSet<>());
         originClassParam.setOriginClassFieldList(new ArrayList<>(introspectedTable.getAllColumns().size()));
+        String logicTableName = introspectedTable.getTableConfiguration().getTableName();
+        String suffixRegex = GlobalContext.map.get("table.remove.suffix.regex");
+        if (StringUtils.isNotEmpty(suffixRegex)) {
+            logicTableName = logicTableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
+        }
+        originClassParam.setTableName(logicTableName);
+        originClassParam.setTableRemark(StringUtil.replaceLast(introspectedTable.getRemarks(), "表", StringUtils.EMPTY));
         for (IntrospectedColumn column : introspectedTable.getAllColumns()) {
             if (column.getFullyQualifiedJavaType().isExplicitlyImported()) {
                 originClassParam.getFieldImportList().add(column.getFullyQualifiedJavaType().getFullyQualifiedName());
@@ -100,7 +107,6 @@ public class VelocityPlugin extends PluginAdapter {
             OriginClassParam originClassParam = getClassParamFromCache(domainName);
             GlobalContext.map.put("domainName", domainName);
             GlobalContext.map.put("domainFullName", domainFullName);
-            originClassParam.setTableRemark(StringUtil.replaceLast(introspectedTable.getRemarks(), "表", StringUtils.EMPTY));
             // 创建模板
             for (File templateFile : templateList) {
                 String shortTemplateFileName = getShortFileName(templateFile);

@@ -456,7 +456,7 @@ public class Context extends PropertyHolder {
 
             //lfx自定义处理: 生成所有表
             if (tableConfigurations.size() == 1 && "*".equals(tableConfigurations.get(0).getTableName())) {
-                Set<String> cachedTableName = new HashSet<>();
+                Set<String> cachedClassName = new HashSet<>();
 
                 tableConfigurations.clear();
                 GeneratedKey generatedKey = new GeneratedKey("id", "MySql", true, "java.lang.Long");
@@ -465,36 +465,42 @@ public class Context extends PropertyHolder {
                 while (resultSet.next()) {
                     String tableName = resultSet.getString("TABLE_NAME").toLowerCase();
 
-                    if (CollectionUtils.isNotEmpty(GlobalContext.includeTable)) {
-                        if (!GlobalContext.includeTable.contains(tableName)) {
-                            continue;
-                        }
-                    } else if (CollectionUtils.isNotEmpty(GlobalContext.excludeTable)) {
-                        if (GlobalContext.excludeTable.contains(tableName)) {
-                            continue;
-                        }
-                    }
+                    String className = tableName;
+                    // 去除后缀的表名
+                    String logicTableName = tableName;
 
-                    String newTableName = tableName;
-                    String prefixTable = GlobalContext.map.get("table.remove.prefix");
-                    if (prefixTable != null && tableName.startsWith(prefixTable)) {
-                        newTableName = tableName.replaceFirst(prefixTable, StringUtils.EMPTY);
-                    }
                     String suffixRegex = GlobalContext.map.get("table.remove.suffix.regex");
                     if (StringUtils.isNotEmpty(suffixRegex)) {
-                        newTableName = newTableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
+                        logicTableName = tableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
+                        className = logicTableName;
+                    }
+
+                    String prefixTable = GlobalContext.map.get("table.remove.prefix");
+                    if (prefixTable != null && tableName.startsWith(prefixTable)) {
+                        className = logicTableName.replaceFirst(prefixTable, StringUtils.EMPTY);
                     }
 
                     //lfx自定义处理: 过滤掉重复的表: 分表场景，去除表后缀后可能存在重复表名
-                    if (cachedTableName.contains(newTableName)) {
+                    if (cachedClassName.contains(className)) {
                         continue;
                     }
-                    cachedTableName.add(newTableName);
+
+                    if (CollectionUtils.isNotEmpty(GlobalContext.includeTable)) {
+                        if (!GlobalContext.includeTable.contains(logicTableName)) {
+                            continue;
+                        }
+                    } else if (CollectionUtils.isNotEmpty(GlobalContext.excludeTable)) {
+                        if (GlobalContext.excludeTable.contains(logicTableName)) {
+                            continue;
+                        }
+                    }
+
+                    cachedClassName.add(className);
 
                     TableConfiguration tc = new TableConfiguration(this);
                     tc.setGeneratedKey(generatedKey);
                     tc.setTableName(tableName);
-                    tc.setDomainObjectName(JavaBeansUtil.getCamelCaseString(newTableName, true));
+                    tc.setDomainObjectName(JavaBeansUtil.getCamelCaseString(className, true));
                     tableConfigurations.add(tc);
                 }
             }
