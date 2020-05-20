@@ -15,7 +15,7 @@ public class $!{domainName}Po implements Serializable {
 #foreach($originClassField in $originClassParam.originClassFieldList)
 
     /**
-     *  $!{originClassField.fieldRemark}
+     * $!{originClassField.fieldRemark}
      */
     private $!{originClassField.fieldType} $!{originClassField.fieldName};
 #end
