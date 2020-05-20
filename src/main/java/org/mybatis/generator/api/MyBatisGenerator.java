@@ -16,6 +16,7 @@
 package org.mybatis.generator.api;
 
 import com.lfx.code.mbg.plus.context.GlobalContext;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.mybatis.generator.codegen.RootClassInfo;
 import org.mybatis.generator.config.Configuration;
@@ -341,7 +342,8 @@ public class MyBatisGenerator {
         File targetFile;
         String source;
         try {
-            File directory = shellCallback.getDirectory(gxf
+            String location = GlobalContext.map.get("mapper.location");
+            File directory = StringUtils.isNoneBlank(location) ? new File(location) : shellCallback.getDirectory(gxf
                     .getTargetProject(), gxf.getTargetPackage());
             targetFile = new File(directory, gxf.getFileName());
             if (targetFile.exists()) {
