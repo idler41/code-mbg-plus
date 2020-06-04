@@ -1,8 +1,8 @@
 #set($mapperPackage = $context.get("project.package.mapper"))
-#set($bizPackage = $context.get("plugin.template.biz.package"))
+#set($bizPackage = $context.get("plugin.template.manager.package"))
 package $!{bizPackage};
 
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import $!{domainFullName};
 import $!{mapperPackage}.$!{domainName}Mapper;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Service;
  * @date $!{generateTime}
  */
 @Service
-public class $!{domainName}Biz extends ServiceImpl<$!{domainName}Mapper, $!{domainName}> {
+public class $!{domainName}Manager extends ServiceImpl<$!{domainName}Mapper, $!{domainName}> {
 
 }
