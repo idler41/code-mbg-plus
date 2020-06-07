@@ -2,6 +2,7 @@ package com.lfx.code.mbg.plus.plugin.context;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import java.util.Set;
  * @date 2020-05-13 11:53:30
  */
 @Data
-public class OriginClassParam {
+public class OriginClassParam implements Serializable {
 
     /**
      * 对应的表名称

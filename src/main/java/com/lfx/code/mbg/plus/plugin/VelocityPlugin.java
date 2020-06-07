@@ -6,8 +6,8 @@ import com.lfx.code.mbg.plus.plugin.context.OriginClassField;
 import com.lfx.code.mbg.plus.plugin.context.OriginClassParam;
 import com.lfx.code.mbg.plus.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -104,12 +104,14 @@ public class VelocityPlugin extends PluginAdapter {
             TopLevelClass topLevelClass = (TopLevelClass) javaFile.getCompilationUnit();
             String domainName = topLevelClass.getType().getShortName();
             String domainFullName = topLevelClass.getType().getFullyQualifiedName();
-            OriginClassParam originClassParam = getClassParamFromCache(domainName);
             GlobalContext.map.put("domainName", domainName);
             GlobalContext.map.put("domainFullName", domainFullName);
             // 创建模板
             for (File templateFile : templateList) {
                 String shortTemplateFileName = getShortFileName(templateFile);
+                // 每个模板都用独立的对象，避免互相干扰
+                OriginClassParam originClassParam = getClassParamFromCache(domainName);
+                originClassParam = SerializationUtils.clone(originClassParam);
                 doFilter(shortTemplateFileName, originClassParam);
                 String enableKey = String.format(AppConstants.PLUGIN_TEMPLATE_ENABLE_KEY, shortTemplateFileName);
                 if (Boolean.parseBoolean(GlobalContext.map.get(enableKey))) {
