@@ -158,6 +158,10 @@ public class VelocityPlugin extends PluginAdapter {
         for (String excludeField : excludeFields) {
             String fieldType = fieldNameTypeMap.get(excludeField);
             Long importTimes = typeCountMap.get(fieldType);
+            if (importTimes == null) {
+                // fix npe bug
+                continue;
+            }
             importTimes--;
             if (importTimes.equals(0L)) {
                 originClassParam.getFieldImportList().remove(fieldType);
