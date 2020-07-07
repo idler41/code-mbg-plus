@@ -6,6 +6,7 @@ import com.lfx.code.mbg.plus.plugin.context.OriginClassField;
 import com.lfx.code.mbg.plus.plugin.context.OriginClassParam;
 import com.lfx.code.mbg.plus.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -145,7 +146,9 @@ public class VelocityPlugin extends PluginAdapter {
         if (excludeFields.length == 0) {
             return;
         }
-
+        if (CollectionUtils.isEmpty(originClassParam.getOriginClassFieldList())) {
+            return;
+        }
         Map<String, Long> typeCountMap = originClassParam.getOriginClassFieldList().stream().collect(Collectors.groupingBy(OriginClassField::getFieldType, Collectors.counting()));
         Map<String, String> fieldNameTypeMap = originClassParam.getOriginClassFieldList().stream().collect(Collectors.toMap(OriginClassField::getFieldName, OriginClassField::getFieldType));
         int size = originClassParam.getOriginClassFieldList().size();
