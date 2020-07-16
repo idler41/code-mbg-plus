@@ -35,7 +35,7 @@ public class App {
     private static final String DEFAULT_XML = "generator.xml";
 
     public static void main(String[] args) throws Exception {
-
+        log.info("代码生成器运行开始...");
         // 读取配置信息 + 校验必填参数
         PlaceHolderProperties extraProperties = loadProperties();
         validProp(extraProperties);
@@ -49,7 +49,7 @@ public class App {
         Configuration config = cp.parseConfiguration(App.class.getClassLoader().getResourceAsStream(DEFAULT_XML));
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, new MyShellCallback(true), warnings);
         myBatisGenerator.generate(null);
-
+        log.info("代码生成器运行结束...");
     }
 
     private static void initGlobalContext(PlaceHolderProperties extraProperties) {
