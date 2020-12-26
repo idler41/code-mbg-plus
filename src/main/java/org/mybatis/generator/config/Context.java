@@ -18,6 +18,7 @@ package org.mybatis.generator.config;
 import com.lfx.code.mbg.plus.context.GlobalContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.ConnectionFactory;
 import org.mybatis.generator.api.GeneratedJavaFile;
@@ -25,6 +26,7 @@ import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.JavaFormatter;
 import org.mybatis.generator.api.JavaTypeResolver;
+import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.api.Plugin;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.api.XmlFormatter;
@@ -402,6 +404,9 @@ public class Context extends PropertyHolder {
 
     private List<IntrospectedTable> introspectedTables;
 
+    //lfx自定义：添加日志
+    private static final Logger logger = Logger.getLogger(Context.class);
+
     public int getIntrospectionSteps() {
         int steps = 0;
 
@@ -503,6 +508,7 @@ public class Context extends PropertyHolder {
                     tc.setDomainObjectName(JavaBeansUtil.getCamelCaseString(className, true));
                     tableConfigurations.add(tc);
                 }
+                logger.info("扫描表数量:" + tableConfigurations.size());
             }
             //lfx自定义处理: 生成所有表
 
