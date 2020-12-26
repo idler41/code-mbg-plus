@@ -174,13 +174,13 @@ plugin.template.field.exclude.filter=po,vo
 
 ```shell
 ## 打jar包
-> mvn clean install
+> mvn clean assembly:assembly -Dmaven.test.skip
 
 ## windows 执行
-> java -Dinit.path=D:\init.properties -jar code-mbg-plus.jar
+> java -Dinit.path=D:\init.properties -jar mbg-plus-jar-with-dependencies.jar
 
 ## linux 执行
-> java -Dinit.path=/Users/apple/mywork/mbg-file/init.properties -jar code-mbg-plus.jar
+> java -Dinit.path=/Users/apple/mywork/mbg-file/init.properties -jar mbg-plus-jar-with-dependencies.jar
 ```
 
 ## 模板详解

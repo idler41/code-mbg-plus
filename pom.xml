@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.lfx</groupId>
-    <artifactId>com.lfx.code.mbg-plus</artifactId>
+    <artifactId>mbg-plus</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>com.lfx.code.mbg-plus</name>
+    <name>mbg-plus</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -91,7 +91,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>${project.name}</finalName>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
