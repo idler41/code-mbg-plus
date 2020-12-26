@@ -395,6 +395,11 @@ public class MyBatisGenerator {
             return;
         }
 
+        //lfx自定义：系统自动创建父级目录
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+
         FileOutputStream fos = new FileOutputStream(file, false);
         OutputStreamWriter osw;
         if (fileEncoding == null) {
