@@ -176,10 +176,10 @@ public class VelocityPlugin extends PluginAdapter {
     }
 
     private String resolveTargetFileName(String shortTemplateFileName, String domainName) {
-        String javaPath = GlobalContext.map.get("project.path.java");
+        String path = shortTemplateFileName.endsWith("Test") ? GlobalContext.map.get("project.path.test") : GlobalContext.map.get("project.path.java");
         String packageVal = GlobalContext.map.get(String.format(AppConstants.PLUGIN_TEMPLATE_PACKAGE_KEY, shortTemplateFileName));
         String velocityFileName = "model".equals(shortTemplateFileName) ? ".java" : (StringUtil.toUpperCaseOfFirst(shortTemplateFileName) + ".java");
-        return javaPath + File.separator + packageVal.replace(AppConstants.DOT, File.separator) +
+        return path + File.separator + packageVal.replace(AppConstants.DOT, File.separator) +
                 File.separator + domainName + velocityFileName;
     }
 
