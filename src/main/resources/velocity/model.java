@@ -1,4 +1,4 @@
-#set($domainPackage = $context.get("plugin.template.model.package"))
+#set($domainPackage = $config.get("plugin.template.model.package"))
 package $!{domainPackage};
 
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,7 +11,7 @@ import $!{fieldImport};
 #foreach($javaDocLine in $originClassParam.javaDocLines)
 $!{javaDocLine}
 #end
-@TableName("$originClassParam.tableName")
+@TableName("$!{tableName}")
 @Data
 public class $!{domainName} implements Serializable {
 #foreach($originClassField in $originClassParam.originClassFieldList)

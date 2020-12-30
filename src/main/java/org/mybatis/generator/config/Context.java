@@ -15,8 +15,7 @@
  */
 package org.mybatis.generator.config;
 
-import com.lfx.code.mbg.plus.context.GlobalContext;
-import org.apache.commons.collections.CollectionUtils;
+import com.lfx.code.mbg.plus.context.PlusContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.mybatis.generator.api.CommentGenerator;
@@ -26,7 +25,6 @@ import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.JavaFormatter;
 import org.mybatis.generator.api.JavaTypeResolver;
-import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.api.Plugin;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.api.XmlFormatter;
@@ -460,7 +458,7 @@ public class Context extends PropertyHolder {
             String catalog = connection.getCatalog();
 
             //lfx自定义处理: 生成所有表
-            if (tableConfigurations.size() == 1 && "*".equals(tableConfigurations.get(0).getTableName())) {
+            if (PlusContext.isScanAllTable()) {
                 Set<String> cachedClassName = new HashSet<>();
 
                 tableConfigurations.clear();
@@ -471,35 +469,20 @@ public class Context extends PropertyHolder {
                     String tableName = resultSet.getString("TABLE_NAME").toLowerCase();
 
                     String className = tableName;
-                    // 去除后缀的表名
                     String logicTableName = tableName;
-
-                    String suffixRegex = GlobalContext.map.get("table.remove.suffix.regex");
+                    String suffixRegex = PlusContext.getProperty("scan.table.suffix.remove.regex");
                     if (StringUtils.isNotEmpty(suffixRegex)) {
                         logicTableName = tableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
                         className = logicTableName;
                     }
-
-                    String prefixTable = GlobalContext.map.get("table.remove.prefix");
+                    String prefixTable = PlusContext.getProperty("scan.table.prefix.remove");
                     if (prefixTable != null && tableName.startsWith(prefixTable)) {
                         className = logicTableName.replaceFirst(prefixTable, StringUtils.EMPTY);
                     }
 
-                    //lfx自定义处理: 过滤掉重复的表: 分表场景，去除表后缀后可能存在重复表名
-                    if (cachedClassName.contains(className)) {
+                    if (cachedClassName.contains(className) || !PlusContext.isIncludeTable(logicTableName) || PlusContext.isExcludeTable(logicTableName)) {
                         continue;
                     }
-
-                    if (CollectionUtils.isNotEmpty(GlobalContext.includeTable)) {
-                        if (!GlobalContext.includeTable.contains(logicTableName)) {
-                            continue;
-                        }
-                    } else if (CollectionUtils.isNotEmpty(GlobalContext.excludeTable)) {
-                        if (GlobalContext.excludeTable.contains(logicTableName)) {
-                            continue;
-                        }
-                    }
-
                     cachedClassName.add(className);
 
                     TableConfiguration tc = new TableConfiguration(this);
@@ -544,6 +527,13 @@ public class Context extends PropertyHolder {
                                 introspectedTable.setRemarks(resultSet.getString("COMMENT"));
                             }
                             introspectedTable.setAttribute("MyCatalog", catalog);
+                            String suffixRegex = PlusContext.getProperty("scan.table.suffix.remove.regex");
+                            if (StringUtils.isNotEmpty(suffixRegex)) {
+                                String logicName = tableName.replaceFirst(suffixRegex, StringUtils.EMPTY);
+                                introspectedTable.getTableConfiguration().setTableName(logicName);
+                                // TODO 分库分表时，xml生成的sql语句没有用逻辑表名
+//                                introspectedTable.getFullyQualifiedTable()
+                            }
                         }
                     }
 

@@ -1,4 +1,4 @@
-#set($voPackage = $context.get("plugin.template.vo.package"))
+#set($voPackage = $config.get("plugin.template.vo.package"))
 package $!{voPackage};
 
 import lombok.Data;

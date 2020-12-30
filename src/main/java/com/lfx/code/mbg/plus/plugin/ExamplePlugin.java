@@ -1,6 +1,6 @@
 package com.lfx.code.mbg.plus.plugin;
 
-import com.lfx.code.mbg.plus.context.GlobalContext;
+import com.lfx.code.mbg.plus.context.PlusContext;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ExamplePlugin extends PluginAdapter {
     @Override
     public boolean validate(List<String> warnings) {
-        return Boolean.parseBoolean(GlobalContext.map.get("plugin.example.enable"));
+        return Boolean.parseBoolean(PlusContext.getProperty("plugin.example.enable"));
     }
 
 

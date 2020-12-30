@@ -1,6 +1,6 @@
 package com.lfx.code.mbg.plus.plugin;
 
-import com.lfx.code.mbg.plus.context.GlobalContext;
+import com.lfx.code.mbg.plus.context.PlusContext;
 import org.apache.commons.lang3.StringUtils;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
@@ -10,11 +10,9 @@ import org.mybatis.generator.api.dom.xml.Element;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:idler41@163.com">idler41</a>
@@ -24,7 +22,7 @@ public class MapperPlugin extends PluginAdapter {
 
     @Override
     public boolean validate(List<String> warnings) {
-        return Boolean.parseBoolean(GlobalContext.map.get("plugin.mapper.enable"));
+        return Boolean.parseBoolean(PlusContext.getProperty("plugin.mapper.enable"));
     }
 
     @Override
@@ -37,7 +35,7 @@ public class MapperPlugin extends PluginAdapter {
 
     private void removeElement(Document document) {
         if (idList == null) {
-            String idListStr = GlobalContext.map.get("mapper.id.include");
+            String idListStr = PlusContext.getProperty("target.mapperXml.element.include");
             idList = StringUtils.isEmpty(idListStr) ? Collections.emptyList() : Arrays.asList(idListStr.split(","));
         }
 

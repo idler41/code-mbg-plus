@@ -1,5 +1,5 @@
-#set($mapperPackage = $context.get("project.package.mapper"))
-#set($bizPackage = $context.get("plugin.template.manager.package"))
+#set($mapperPackage = $config.get("target.project.package.mapper"))
+#set($bizPackage = $config.get("plugin.template.manager.package"))
 package $!{bizPackage};
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,8 +8,8 @@ import $!{mapperPackage}.$!{domainName}Mapper;
 import org.springframework.stereotype.Service;
 
 /**
- * @author $context.get("project.author")
- * @date $!{generateTime}
+ * @author $config.get("comment.author")
+ * @date $config.get("generateTime")
  */
 @Service
 public class $!{domainName}Manager extends ServiceImpl<$!{domainName}Mapper, $!{domainName}> {

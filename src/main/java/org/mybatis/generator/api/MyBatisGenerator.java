@@ -15,7 +15,7 @@
  */
 package org.mybatis.generator.api;
 
-import com.lfx.code.mbg.plus.context.GlobalContext;
+import com.lfx.code.mbg.plus.context.PlusContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.mybatis.generator.codegen.RootClassInfo;
@@ -285,7 +285,7 @@ public class MyBatisGenerator {
 
             for (GeneratedJavaFile gjf : generatedJavaFiles) {
                 projects.add(gjf.getTargetProject());
-                if (!Boolean.parseBoolean(GlobalContext.map.get("plugin.template.model.enable"))) {
+                if (!Boolean.parseBoolean(PlusContext.getProperty("plugin.template.model.enable"))) {
                     // //lfx自定义：开启model插件,则mbg不生成model
                     writeGeneratedJavaFile(gjf, callback);
                 }
@@ -342,7 +342,7 @@ public class MyBatisGenerator {
         File targetFile;
         String source;
         try {
-            String location = GlobalContext.map.get("mapper.location");
+            String location = PlusContext.getProperty("target.mapperXml.path");
             File directory = StringUtils.isNoneBlank(location) ? new File(location) : shellCallback.getDirectory(gxf
                     .getTargetProject(), gxf.getTargetPackage());
             targetFile = new File(directory, gxf.getFileName());
@@ -391,7 +391,7 @@ public class MyBatisGenerator {
      */
     private void writeFile(File file, String content, String fileEncoding) throws IOException {
         //lfx自定义：添加忽略功能
-        if (file.exists() && Boolean.parseBoolean(GlobalContext.map.get("file.ignore"))) {
+        if (file.exists() && PlusContext.isIgnoreFile()) {
             return;
         }
 

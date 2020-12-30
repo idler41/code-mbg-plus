@@ -1,6 +1,6 @@
 package com.lfx.code.mbg.plus.comment;
 
-import com.lfx.code.mbg.plus.context.GlobalContext;
+import com.lfx.code.mbg.plus.context.PlusContext;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.Field;
@@ -23,6 +23,7 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
      *
      * @param xmlElement the xml element
      */
+    @Override
     public void addComment(XmlElement xmlElement) {
         // xml 中不生成注释
     }
@@ -32,8 +33,8 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
                                      IntrospectedTable introspectedTable) {
 
         topLevelClass.addJavaDocLine("/**");
-        topLevelClass.addJavaDocLine(" * @author " + GlobalContext.map.get("project.author"));
-        topLevelClass.addJavaDocLine(" * @date " + GlobalContext.GENERATE_TIME);
+        topLevelClass.addJavaDocLine(" * @author " + PlusContext.getProperty("comment.author"));
+        topLevelClass.addJavaDocLine(" * @date " + PlusContext.getProperty("generateTime"));
         topLevelClass.addJavaDocLine(" */");
     }
 
@@ -42,12 +43,12 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         // 属性的注释只包含数据库的列备注
         String remarks = column.getRemarks();
         if (StringUtility.stringHasValue(remarks)) {
-            field.addJavaDocLine("/**"); //$NON-NLS-1$
-            String[] remarkLines = remarks.split(System.getProperty("line.separator"));  //$NON-NLS-1$
+            field.addJavaDocLine("/**");
+            String[] remarkLines = remarks.split(System.getProperty("line.separator"));  
             for (String remarkLine : remarkLines) {
-                field.addJavaDocLine(" * " + remarkLine);  //$NON-NLS-1$
+                field.addJavaDocLine(" * " + remarkLine);
             }
-            field.addJavaDocLine(" */"); //$NON-NLS-1$
+            field.addJavaDocLine(" */");
         }
     }
 

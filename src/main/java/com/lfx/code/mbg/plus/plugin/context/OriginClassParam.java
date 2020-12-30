@@ -1,6 +1,9 @@
 package com.lfx.code.mbg.plus.plugin.context;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +14,9 @@ import java.util.Set;
  * @date 2020-05-13 11:53:30
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OriginClassParam implements Serializable {
 
     /**

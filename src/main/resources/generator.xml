@@ -49,13 +49,13 @@
         </javaTypeResolver>
 
         <!--生成Model类存放位置-->
-        <javaModelGenerator targetPackage="${project.package.model}" targetProject="${project.path.java}">
+        <javaModelGenerator targetPackage="${target.project.package.model}" targetProject="${target.project.path.java}">
             <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
             <property name="enableSubPackages" value="false"/>
         </javaModelGenerator>
 
         <!--生成映射文件存放位置-->
-        <sqlMapGenerator targetPackage="${project.package.mapper}" targetProject="${project.path.resources}">
+        <sqlMapGenerator targetPackage="${target.project.package.mapper}" targetProject="${target.project.path.resources}">
             <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
@@ -66,7 +66,7 @@
         <!--</javaClientGenerator>-->
 
         <!--生成对应表及类名-->
-        <table tableName="*"></table>
+        <table tableName="scanAllTable"></table>
         <!--<table tableName="am_user" domainObjectName="User">-->
         <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
         <!--</table>-->

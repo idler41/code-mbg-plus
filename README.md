@@ -95,77 +95,90 @@ xml文件缩进由2个空格改为4个空格
 ## 启动参数文件模板
 
 ```properties
-############################ 必填参数 ############################
 jdbc.driver=com.mysql.cj.jdbc.Driver
-jdbc.url=jdbc:mysql://localhost:3306/oms?useUnicode=true&characterEncoding=UTF-8
+jdbc.url=jdbc:mysql://localhost:3306/mall_activity?useUnicode=true&characterEncoding=UTF-8
+# jdbc.url=jdbc:mysql://localhost:3306/shard_mall_activity_0?useUnicode=true&characterEncoding=UTF-8
 jdbc.username=root
-jdbc.password=root
-
-## 模板路径
-### linux
-template.home=/Users/apple/GitHub/code-mbg-plus/src/main/resources/velocity
-### windows
-#template.home=G:\\mbg-file\\velocity
-## 生成项目路径
-### linux
-project.home=/Users/apple/mywork/micro-service
-### windows
-#project.home=G:\\mbg-file
-project.name=demo
-## 生成domain包名
-project.package.model=com.demo.domain
-## 生成mapper包名
-project.package.mapper=com.demo.mapper
-
-project.path=${project.home}/${project.name}
-project.path.java=${project.path}/src/main/java
-project.path.resources=${project.path}/src/main/resources
-project.path.test=${project.path}/src/main/test
-############################ 必填参数 ############################
-
-############################ 选填参数 ############################
-project.author=<a href="mailto:demo@163.con">demo</a>
-file.ignore=true
-## 生成的mapper方法
-## BaseResultMap,Example_Where_Clause,Update_By_Example_Where_Clause,Base_Column_List,selectByExample,selectByPrimaryKey,deleteByPrimaryKey,deleteByExample,insert,insertSelective,countByExample,updateByExampleSelective,updateByExample,updateByPrimaryKeySelective,updateByPrimaryKey
-mapper.id.include=BaseResultMap,Base_Column_List
-## xml生成路径
-mapper.location=${project.path.resources}/mapper
+jdbc.password=123456
 
 ## 生成指定表
-tables.include=
+scan.table.include=
 ## 不生成指定表
-tables.exclude=
+scan.table.exclude=
 ## 去除表前缀
-table.remove.prefix=t_
+scan.table.prefix.remove=t_
 ## 去除表后缀, \\_\\d*$ (t_user_16 => t_user)
-table.remove.suffix.regex=\\_\\d*$
+scan.table.suffix.remove.regex=\\_\\d*$
 
-## 启用指定插件
+## 生成文件，文件存在时处理策略: ignore-忽略 override-覆盖
+target.file.exist.strategy=ignore
+## 生成项目home路径
+target.project.home=E:/workspace/mall-marketing
+## 生成项目名称
+target.project.name=mall-marketing-persistence
+## 生成项目路径
+target.project.path=${target.project.home}/${target.project.name}
+## 生成项目java文件路径
+target.project.path.java=${target.project.path}/src/main/java
+## 生成项目资源文件路径
+target.project.path.resources=${target.project.path}/src/main/resources
+## 生成项目测试文件路径
+target.project.path.test=${target.project.path}/src/test/java
+
+## 项目基础包名
+target.project.package.base=com.lfx.mall.marketing.persistence
+## 生成domain包名
+target.project.package.model=${target.project.package.base}.entity
+## 生成mapper包名
+target.project.package.mapper=${target.project.package.base}.dao
+
+## xml生成路径
+target.mapperXml.path=${target.project.path.resources}/mapper
+## 生成xml文件可包含元素
+## BaseResultMap,Example_Where_Clause,Update_By_Example_Where_Clause,Base_Column_List,selectByExample,selectByPrimaryKey,deleteByPrimaryKey,deleteByExample,insert,insertSelective,countByExample,updateByExampleSelective,updateByExample,updateByPrimaryKeySelective,updateByPrimaryKey
+target.mapperXml.element.include=BaseResultMap,Base_Column_List
+
+## 作者信息备注
+comment.author=<a href="mailto:idler41@163.con">idler41</a>
+
+## 启用自定义插件
 plugin.example.enable=true
 plugin.lombok.enable=true
 plugin.mapper.enable=true
 plugin.mapper-ignore.enable=true
 plugin.template.enable=true
 
-### velocity启动模板
-plugin.template.manager.enable=true
-plugin.template.manager.package=com.demo.biz
-plugin.template.mapper.enable=true
-plugin.template.mapper.package=${project.package.mapper}
-plugin.template.model.enable=true
-plugin.template.model.package=${project.package.model}
-plugin.template.controller.enable=true
-plugin.template.controller.package=com.demo.controller
-plugin.template.po.enable=true
-plugin.template.po.package=com.demo.controller.po
-plugin.template.po.field.exclude=createTime,updateTime
-plugin.template.vo.enable=true
-plugin.template.vo.package=com.demo.controller.vo
-plugin.template.vo.field.exclude=
+## 模板路径
+plugin.template.home=D:/mbg/mall-groupshopping/velocity
 
-plugin.template.field.exclude.filter=po,vo
-############################ 选填参数 ############################
+# 模板插件约定配置: plugin.template.模板文件名(不包含后缀).模板自定义属性(模板引擎可访问)
+
+## manager.java模板
+plugin.template.manager.enable=true
+plugin.template.manager.package=${target.project.package.base}.manager
+## mapper.java模板
+plugin.template.mapper.enable=true
+plugin.template.mapper.package=${target.project.package.mapper}
+## model.java模板
+plugin.template.model.enable=true
+plugin.template.model.package=${target.project.package.model}
+## controller.java模板
+plugin.template.controller.enable=true
+plugin.template.controller.package=${target.project.package.base}.controller
+## po.java模板
+plugin.template.po.enable=true
+plugin.template.po.package=${target.project.package.base}.controller.po
+plugin.template.po.field.exclude=createTime,updateTime
+## vo.java模板
+plugin.template.vo.enable=true
+plugin.template.vo.package=${target.project.package.base}.controller.vo
+plugin.template.vo.field.exclude=updateTime
+## convert.java模板
+plugin.template.converter.enable=true
+plugin.template.converter.package=${target.project.package.base}.converter
+## managerTest.java模板
+plugin.template.managerTest.enable=true
+plugin.template.managerTest.package=${plugin.template.manager.package}
 ```
 
 ## 执行命令
@@ -187,24 +200,20 @@ plugin.template.field.exclude.filter=po,vo
 
 ### 添加新模板步骤
 
-1. 在配置属性template.home的路径下添加模板文件
+1. 在配置属性plugin.template.home的路径下添加模板文件
 2. 添加模板参数配置(假如该模板文件名称为xx.java)
 	1. 启用该插件: plugin.template.xx.enable=true
 	2. 模板生成到指定package： plugin.template.xx.package=
 
 ### 特殊模板: model.java
 
-在template.home的路径下添加名称为model.java的模板文件
+1. 在template.home的路径下添加名称为model.java的模板文件
 
-配置参数启用:
-
-```properties
-plugin.template.model.enable=true
-```
+2. 配置参数: ```properties plugin.template.model.enable=true ```
 
 该模板启用后，mbg不会为每个表生成domain文件，而是改为模板插件生成domain文件。 如果关闭，则mbg会为每个表生成domain文件。 
 
-插件方式生成domain文件相比mbg优点: 自由度更高,可以在不更改代码的情况下，随时更改模板
+模板插件方式生成domain文件相比mbg优点: 自由度更高,可以在不更改代码的情况下，随时更改模板
 
 ## TODO
 

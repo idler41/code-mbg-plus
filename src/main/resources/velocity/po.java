@@ -1,4 +1,4 @@
-#set($poPackage = $context.get("plugin.template.po.package"))
+#set($poPackage = $config.get("plugin.template.po.package"))
 package $!{poPackage};
 
 import lombok.Data;
