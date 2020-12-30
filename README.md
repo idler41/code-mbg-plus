@@ -25,26 +25,26 @@
 
 ```properties
 ## 生成指定表
-tables.include=t_user,t_role
+scan.table.include=t_user,t_role
 ## 不生成指定表
-tables.exclude=t_user
+scan.table.exclude=t_user
 ```
-同时配置tables.include和tables.exclude时只有tables.include会生效。
+同时配置scan.table.include和scan.table.exclude时只有scan.table.include会生效。
 
 ### 表名特殊处理
 
 ```properties
 ## 去除表前缀
-table.remove.prefix=t_
+scan.table.prefix.remove=t_
 ## 去除表后缀, \\_\\d*$ (t_user_16 => t_user)
-table.remove.suffix.regex=\\_\\d*$
+scan.table.suffix.remove.regex=\\_\\d*$
 ```
 
 ### 配置mapper.xml生成指定元素
 
 ```
 ## BaseResultMap,Example_Where_Clause,Update_By_Example_Where_Clause,Base_Column_List,selectByExample,selectByPrimaryKey,deleteByPrimaryKey,deleteByExample,insert,insertSelective,countByExample,updateByExampleSelective,updateByExample,updateByPrimaryKeySelective,updateByPrimaryKey
-mapper.id.include=BaseResultMap,Base_Column_List
+target.mapperXml.element.include=BaseResultMap,Base_Column_List
 ```
 
 
@@ -72,16 +72,7 @@ mapper.id.include=BaseResultMap,Base_Column_List
 ### 添加作者信息
 
 ```properties
-project.author=<a href="mailto:demo@163.con">demo</a>
-```
-
-```java
-/**
- * @author <a href="mailto:demo@163.com">demo</a>
- * @date 2020-04-13 23:28:56
- */
- public class XXX
-
+comment.author=<a href="mailto:demo@163.con">demo</a>
 ```
 
 ### XML文件格式
